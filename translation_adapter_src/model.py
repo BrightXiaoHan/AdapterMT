@@ -36,7 +36,7 @@ class TransformerDecoderLayerWithAdapter(TransformerDecoderLayerBase):
             super().__init__(cfg, *args, **kwargs)
             self.adapter_dims = cfg.adapter_dims if cfg.adapter_dims else self.embed_dim
             self.adapter_layer1 = nn.Linear(self.embed_dim, self.adapter_dims)
-            self.adapter_layer2 = nn.Linear(self.embed_dim, self.adapter_dims)
+            selk.adapter_layer2 = nn.Linear(self.embed_dim, self.adapter_dims)
     
         def forward(self, x, *args, **kwargs):
             x, attn, self_attn_state = super().forward(x, *args, **kwargs)
