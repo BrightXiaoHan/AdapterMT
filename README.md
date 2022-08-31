@@ -40,11 +40,17 @@ python $FAIRSEQ_SRC/scripts/spm_train.py \
 python $FAIRSEQ_SRC/scripts/spm_encode.py \
     --model $DATA_DIR/sentencepiece.bpe.model \
     --inputs $RAW_DATA_DIR/en.train $RAW_DATA_DIR/zh.train \
-      $RAW_DATA_DIR/en.valid $RAW_DATA_DIR/zh.valid \
-      $RAW_DATA_DIR/en.test $RAW_DATA_DIR/zh.test \
-    --outputs $DATA_DIR/train.en $DATA_DIR/train.zh \
-      $DATA_DIR/valid.en $DATA_DIR/valid.zh \
-      $DATA_DIR/test.en $DATA_DIR/test.zh
+    --outputs $DATA_DIR/train.en $DATA_DIR/train.zh
+
+python $FAIRSEQ_SRC/scripts/spm_encode.py \
+    --model $DATA_DIR/sentencepiece.bpe.model \
+    --inputs $RAW_DATA_DIR/en.valid $RAW_DATA_DIR/zh.valid \
+    --outputs $DATA_DIR/valid.en $DATA_DIR/valid.zh
+
+python $FAIRSEQ_SRC/scripts/spm_encode.py \
+    --model $DATA_DIR/sentencepiece.bpe.model \
+    --inputs $RAW_DATA_DIR/en.test $RAW_DATA_DIR/zh.test \
+    --outputs $DATA_DIR/test.en $DATA_DIR/test.zh
 ```
 Binarize data
 ```
