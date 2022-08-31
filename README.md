@@ -33,7 +33,9 @@ python $FAIRSEQ_SRC/scripts/spm_train.py \
     --model_prefix=$DATA_DIR/sentencepiece.bpe \
     --vocab_size=32000 \
     --character_coverage=1.0 \
-    --model_type=bpe
+    --model_type=bpe \
+    --input_sentence_size=2000000 \
+    --shuffle_input_sentence=true
 
 python $FAIRSEQ_SRC/scripts/spm_encode.py \
     --model $DATA_DIR/sentencepiece.bpe.model \
