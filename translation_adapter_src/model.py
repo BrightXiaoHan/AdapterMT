@@ -32,21 +32,21 @@ class TransformerEncoderLayerWithAdapter(TransformerEncoderLayerBase):
 
 class TransformerDecoderLayerWithAdapter(TransformerDecoderLayerBase):
     
-        def __init__(self, cfg, *args, **kwargs):
-            super().__init__(cfg, *args, **kwargs)
-            self.adapter_dims = cfg.adapter_dims if cfg.adapter_dims else self.embed_dim
-            self.adapter_layer1 = nn.Linear(self.embed_dim, self.adapter_dims)
-            self.adapter_layer2 = nn.Linear(self.embed_dim, self.adapter_dims)
-    
-        def forward(self, x, *args, **kwargs):
-            x, attn, self_attn_state = super().forward(x, *args, **kwargs)
-            residual = x
-            x = self.activation_fn(self.adapter_layer1(x))
-            x = self.activation_dropout_module(x)
-            x = self.adapter_layer1(x)
-            x = self.dropout_module(x)
-            x = self.residual_connection(x, residual)
-            return x, attn, self_attn_state
+    def __init__(self, cfg, *args, **kwargs):
+        super().__init__(cfg, *args, **kwargs)
+        self.adapter_dims = cfg.adapter_dims if cfg.adapter_dims else self.embed_dim
+        self.adapter_layer1 = nn.Linear(self.embed_dim, self.adapter_dims)
+        self.adapter_layer2 = nn.Linear(self.embed_dim, self.adapter_dims)
+
+    def forward(self, x, *args, **kwargs):
+        x, attn, self_attn_state = super().forward(x, *args, **kwargs)
+        residual = x
+        x = self.activation_fn(self.adapter_layer1(x))
+        x = self.activation_dropout_module(x)
+        x = self.adapter_layer1(x)
+        x = self.dropout_module(x)
+        x = self.residual_connection(x, residual)
+        return x, attn, self_attn_state
 
 
 class TransformerEncoderWithAdapter(TransformerEncoderBase):
@@ -95,3 +95,12 @@ class TransformerWithAdapterModel(TransformerModel):
             embed_tokens,
             no_encoder_attn=cfg.no_cross_attention,
         )
+
+    def switch_adapter(self, encoder_adapter_layers, decoder_adapter_layers):
+        for layer, adapter_layer in zip(self.encoder.layers, encoder_adapter_layers):
+            layer.adapter_layer1 = adapter_layer[0]
+            layer.adapter_layer2 = adapter_layer[1]
+
+        for layer, adapter_layer in zip(self.decoder.layers, decoder_adapter_layers):
+            layer.adapter_layer1 = adapter_layer[0]
+            layer.adapter_layer2 = adapter_layer[1]
