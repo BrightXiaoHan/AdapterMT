@@ -79,7 +79,7 @@ fairseq-train \
     --sacrebleu \
     --eval-bleu-remove-bpe sentencepiece \
     --eval-bleu-print-samples \
-    --best-checkpoint-metric bleu --maximize-best-checkpoint-metric \
+    --best-checkpoint-metric sacrebleu --maximize-best-checkpoint-metric \
     --save-dir $CHECKPOINTS
 ```
 Evalueate bleu score on valid and test data.
