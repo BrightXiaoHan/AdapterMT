@@ -76,11 +76,10 @@ fairseq-train \
     --max-tokens $MAX_TOKENS \
     --eval-bleu \
     --eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
-    --sacrebleu \
     --eval-bleu-remove-bpe sentencepiece \
     --eval-bleu-print-samples \
     --best-checkpoint-metric sacrebleu --maximize-best-checkpoint-metric \
-    --save-dir $CHECKPOINTS
+    --fp16 --save-dir $CHECKPOINTS
 ```
 Evalueate bleu score on valid and test data.
 ```
