@@ -66,8 +66,9 @@ fairseq-preprocess --source-lang en --target-lang zh \
 Train normal transformer model without adapters.
 ```
 fairseq-train \
-    $RAW_DATA_DIR \
+    $DATA_BIN \
     --arch transformer --share-all-embeddings \
+    --source-lang en --target-lang zh \
     --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
     --lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
     --dropout 0.1 --weight-decay 0.0001 \
@@ -75,23 +76,23 @@ fairseq-train \
     --max-tokens $MAX_TOKENS \
     --eval-bleu \
     --eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
-    --eval-bleu-detok moses \
     --eval-bleu-remove-bpe \
     --eval-bleu-print-samples \
-    --best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+    --best-checkpoint-metric bleu --maximize-best-checkpoint-metric \
+    --save-dir $CHECKPOINTS
 ```
 Evalueate bleu score on valid and test data.
 ```
 fairseq-generate $DATA_BIN \
-    --path checkpoints/checkpoint_best.pt \
-    --beam 5 --remove-bpe | \
+    --path $CHECKPOINTS/checkpoint_best.pt \
+    --beam 5 --remove-bpe \
     --gen-subset valid \
     | grep ^H | LC_ALL=C sort -V | cut -f3- | 
     sacrebleu -t wmt18 -l en-zh
 
 fairseq-generate $DATA_BIN \
-    --path checkpoints/checkpoint_best.pt \
-    --beam 5 --remove-bpe | \
+    --path $CHECKPOINTS/checkpoint_best.pt \
+    --beam 5 --remove-bpe \
     --gen-subset test \
     | grep ^H | LC_ALL=C sort -V | cut -f3- | 
     sacrebleu -t wmt18 -l en-zh
