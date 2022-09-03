@@ -78,6 +78,7 @@ fairseq-train \
     --eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
     --eval-bleu-remove-bpe sentencepiece \
     --eval-bleu-print-samples \
+    --patience 5 \
     --best-checkpoint-metric bleu --maximize-best-checkpoint-metric \
     --fp16 --save-dir $CHECKPOINTS
 ```
@@ -85,7 +86,7 @@ Evalueate bleu score on valid and test data.
 ```
 fairseq-generate $DATA_BIN \
     --path $CHECKPOINTS/checkpoint_best.pt \
-    --beam 5 --remove-bpe \
+    --beam 5 --remove-bpe sentencepiece \
     --replace-unk --sacrebleu \
     --gen-subset valid \
     | grep ^H | LC_ALL=C sort -V | cut -f3- | 
@@ -93,7 +94,7 @@ fairseq-generate $DATA_BIN \
 
 fairseq-generate $DATA_BIN \
     --path $CHECKPOINTS/checkpoint_best.pt \
-    --beam 5 --remove-bpe \
+    --beam 5 --remove-bpe sentencepiece \
     --replace-unk --sacrebleu \
     --gen-subset test \
     | grep ^H | LC_ALL=C sort -V | cut -f3- | 
