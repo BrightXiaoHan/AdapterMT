@@ -33,6 +33,7 @@ python $FAIRSEQ_SRC/scripts/spm_train.py \
     --model_prefix=$DATA_DIR/sentencepiece.bpe \
     --vocab_size=32000 \
     --character_coverage=1.0 \
+    --normalization_rule_name=identity \
     --model_type=bpe \
     --input_sentence_size=2000000 \
     --shuffle_input_sentence=true
